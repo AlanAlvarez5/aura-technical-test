@@ -1,54 +1,96 @@
-# React + TypeScript + Vite
+# Prueba Técnica Aura
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción
 
-Currently, two official plugins are available:
+Este proyecto es una prueba técnica para Aura que implementa una aplicación web utilizando tecnologías modernas de desarrollo front-end. La aplicación demuestra habilidades en el manejo de componentes, estado, consumo de APIs y diseño responsivo.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologías Utilizadas
 
-## Expanding the ESLint configuration
+- React.js
+- TypeScript
+- CSS Modules / Styled Components
+- Axios para solicitudes HTTP
+- Jest para pruebas unitarias
+- React Testing Library
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Requisitos Previos
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Node.js (v14.0.0 o superior)
+- npm (v6.0.0 o superior) o yarn
+
+## Instalación
+
+Para instalar las dependencias del proyecto, ejecuta:
+
+```bash
+# Con npm
+npm install
+
+# Con yarn
+yarn install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Ejecución
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Para iniciar el servidor de desarrollo:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+# Con npm
+npm start
+
+# Con yarn
+yarn start
 ```
+
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000)
+
+## Pruebas
+
+Para ejecutar las pruebas unitarias:
+
+```bash
+# Con npm
+npm test
+
+# Con yarn
+yarn test
+```
+
+## Estructura del Proyecto
+
+```
+/src
+  /components      # Componentes reutilizables
+  /pages           # Páginas o vistas principales
+  /services        # Servicios para consumir APIs
+  /hooks           # Hooks personalizados
+  /utils           # Funciones utilitarias
+  /types           # Definiciones de TypeScript
+  /assets          # Imágenes, iconos, etc.
+  /styles          # Estilos globales
+```
+
+## Características Principales
+
+- Diseño responsivo para dispositivos móviles y de escritorio
+- Manejo eficiente del estado de la aplicación
+- Integración con APIs externas
+- Implementación de casos de uso específicos requeridos en la prueba
+
+## Decisiones Técnicas
+
+Se ha optado por [explicar brevemente las decisiones técnicas más importantes], priorizando la mantenibilidad, rendimiento y experiencia de usuario.
+
+## Mejoras Futuras
+
+- Implementación de un sistema de caché para reducir llamadas a la API
+- Mejoras en la accesibilidad
+- Soporte para temas claro/oscuro
+
+## Contacto
+
+Para cualquier pregunta relacionada con este proyecto, por favor contactar a [tu nombre] en [tu correo electrónico].
+
+## Licencia
+
+Este proyecto está licenciado bajo los términos de la licencia MIT.
