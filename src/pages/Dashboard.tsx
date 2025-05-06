@@ -36,7 +36,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div style={{ width: '100vw', height: '100vh', overflow: 'auto' }}>
+    <div style={{ width: 'calc(100vw - 104px)' , height: '100vh', overflow: 'auto' }}>
       <div
         style={{
           height: 390,

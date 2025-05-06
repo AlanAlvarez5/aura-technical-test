@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { users } from '../../users.json';
 
 interface User {
   id: string;
@@ -40,20 +40,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
 
-  const login = (email: string) => {
+  const login = (email: string, password: string) => {
 
     // Simulate a login process
     // In a real application, you would send a request to your backend here
+    const user = users.find((user) => user.email === email && user.password === password);
 
-    const fakeUser: User = {
-      id: uuidv4(),
-      email,
-      name: 'Jon Doe',
-    };
+    if( !user ) {
+      throw new Error('Invalid credentials');
+    }
 
-    localStorage.setItem('auth_user', JSON.stringify(fakeUser));
+    localStorage.setItem('auth_user', JSON.stringify(user));
 
-    setUser(fakeUser);
+    setUser(user);
   };
 
   const logout = () => {

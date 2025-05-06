@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": "bb78bf91-9175-4b34-8155-1511c688aaec",
+      "name": "Alan",
+      "email": "alan@mail.com",
+      "password": "123"
+    },
+    {
+      "id": "1e93417b-5030-4124-956b-4a5873884245",
+      "name": "Aura",
+      "email": "aura@mail.com",
+      "password": "123"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ import { AuthProvider } from './context/Auth.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename='/aura-technical-test'>
         <App />
       </BrowserRouter>
     </AuthProvider>
