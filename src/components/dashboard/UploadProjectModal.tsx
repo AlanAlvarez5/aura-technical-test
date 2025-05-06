@@ -26,21 +26,48 @@ const expertValues = [
   'Partner'
 ];
 
+const companyTypes = [
+  {
+    id: 1,
+    name: 'Company Research',
+  },
+  {
+    id: 2,
+    name: 'Management Research',
+  },
+  {
+    id: 3,
+    name: 'Industry Research',
+  },
+]
+
+enum ProjectTypeEnum {
+  COMPANY_RESEARCH = 1,
+}
+
 export const UploadProjectModal: React.FC<UploadDataFormProps> = ({ open, onCancel }) => {
-  const [type, setType] = useState<number>(0);
+  const [projectType, setProjectType] = useState<number>(0);
   const [expert, setExpert] = useState<string[]>([]);
 
-  const handleCheckChanges = (checked: string[]) => {
-    if (checked.includes('all')) {
-      if (expert.length === expertValues.length) {
-        setExpert([]);
+  const handleCheckChanges = (checkedValues: string[]) => {
+    if (checkedValues.includes('all')) {
+      if (!expert.includes('all')) {
+        setExpert([...expertValues]);
       } else {
-        setExpert(expertValues);
+        setExpert([]);
       }
     } else {
-      setExpert(checked);
+      setExpert(checkedValues);
     }
   };
+
+
+  const isAllSelected = expertValues.every(value => expert.includes(value));
+  const isIndeterminate = expert.length > 0 && !isAllSelected;
+
+  const showCompanyField = (projectType: number ): boolean => {
+    return projectType === ProjectTypeEnum.COMPANY_RESEARCH;
+  }
 
   const onFinish = () => {
     alert('Data Saved');
@@ -69,20 +96,30 @@ export const UploadProjectModal: React.FC<UploadDataFormProps> = ({ open, onCanc
           name="type"
           rules={[{ required: true, message: 'Project type is requiered' }]}
         >
-          <Select value={type} onChange={(v) => setType(v)}>
-            <Option value={0}>Company Research</Option>
-            <Option value={1}>Company Research 2</Option>
-            <Option value={2}>Industry Research 3</Option>
+          <Select value={projectType} onChange={(v) => setProjectType(v)}>
+
+            {
+              companyTypes.map((item) =>
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              )
+            }
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label="Companies"
-          name="companies"
-          rules={[{ required: true, message: 'Company Names is requiered' }]}
-        >
-          <Input placeholder="E.g. Microsoft" />
-        </Form.Item>
+
+        {
+            showCompanyField(projectType) && (
+            <Form.Item
+              label="Companies"
+              name="companies"
+              rules={[{ required: true, message: 'Company Names is requiered' }]}
+            >
+              <Input placeholder="E.g. Microsoft" />
+            </Form.Item>
+          )
+        }
 
         <Form.Item label="Project Description">
           <Input.TextArea
@@ -102,33 +139,43 @@ screening stage."
 
         <Form.Item
           label="Expert"
-          name="companies"
-          rules={[{ required: true, message: 'Company Names is requiered' }]}
+          name="expert"
+          rules={[
+            { required: true, message: 'A Company Expert is required' },
+
+          ]}
         >
-          <Checkbox.Group
-            value={expert}
-            onChange={handleCheckChanges}
-            style={{ width: '100%' }}
+          <div>
+            <Checkbox
+              checked={isAllSelected}
+              indeterminate={isIndeterminate}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setExpert([...expertValues]);
+                } else {
+                  setExpert([]);
+                }
+              }}
             >
-            <Row gutter={16}>
-              <Col span={12}>
-                <Checkbox
-                  value="all"
-                  indeterminate={expert.length > 0 && expert.length < expertValues.length}
-                  checked={expert.length === expertValues.length}
-                  >
-                  All
-                </Checkbox>
-              </Col>
-              {expertValues.map((label) => (
-                <Col span={12} key={label}>
-                  <Checkbox value={label}>
-                    {label.charAt(0).toUpperCase() + label.slice(1)}
-                  </Checkbox>
-                </Col>
-              ))}
-            </Row>
-          </Checkbox.Group>
+              All
+            </Checkbox>
+
+            <Checkbox.Group
+              value={expert}
+              onChange={handleCheckChanges}
+              style={{ width: '100%', marginTop: '8px' }}
+            >
+              <Row gutter={16}>
+                {expertValues.map((label) => (
+                  <Col span={12} key={label}>
+                    <Checkbox value={label}>
+                      {label}
+                    </Checkbox>
+                  </Col>
+                ))}
+              </Row>
+            </Checkbox.Group>
+          </div>
         </Form.Item>
 
         <div style={{ marginTop: 48, display: 'flex', gap: 12 }}>
