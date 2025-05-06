@@ -3,6 +3,8 @@ import { Row, Col, Typography } from "antd";
 import CommonCompanies from "./CommonCompanies";
 import searchDataImage from '../../assets/images/search-data-image.svg';
 import FilterCombo from "../shared/FilterCombo";
+import { FMPApiClient } from "../../utils/FMPApiClient";
+
 
 const { Title, Paragraph } = Typography;
 
@@ -43,8 +45,14 @@ export default function CompanySearcher() {
 
   const handleCompanySearch = async (query: string) => {
     if (!query.trim()) return;
-    const filteredCompanies = commonCompanies.filter(company => company.code.includes(query) || company.name.includes(query));
-    setCompanies(filteredCompanies);
+
+    try {
+      const companies = await FMPApiClient.searchCompanies(query);
+      setCompanies(companies);
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+      alert("Error fetching companies. Please try again.");
+    }
   };
 
   const handleTextFieldChange = (newText: string) => {
