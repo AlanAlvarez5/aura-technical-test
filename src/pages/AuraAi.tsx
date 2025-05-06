@@ -1,28 +1,62 @@
-import { Input, Button, Typography, Card } from 'antd';
+import { Input, Button, Typography, Card, Spin } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import OpenAIApiClient from '../utils/OpenAIApiClient';
 
 const { Title, Paragraph } = Typography;
 
-const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+interface Message {
+  role: 'user' | 'assistant';
+  text: string;
+}
 
 export default function AuraAi() {
   const [prompt, setPrompt] = useState('');
-  const [question, setQuestion] = useState('');
-  const [messages, setMessages] = useState<{ text: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleAskAura = () => {
+  const handleAskAura = async () => {
     if (!prompt.trim()) return;
 
-    setQuestion(prompt);
-    setMessages(prev => [...prev, { text: lorem }]);
+    const userMessage = { role: 'user' as const, text: prompt };
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
     setPrompt('');
+
+    try {
+      const chatMessages = messages.map(msg => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.text
+      }));
+
+      chatMessages.push({
+        role: 'user',
+        content: prompt
+      });
+
+      const response = await OpenAIApiClient.createChatCompletion(chatMessages);
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', text: response.outputText }
+      ]);
+    } catch (error) {
+      console.error('Error al comunicarse con OpenAI:', error);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          text: 'Lo siento, tuve un problema al procesar tu solicitud. Por favor, inténtalo de nuevo más tarde.'
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div style={{  width: '100vw', height: '100vh', overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ width: 'calc(100vw - 104px)', height: '100vh', overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
       <div style={{
         padding: '12px 24px',
         display: 'flex',
@@ -42,27 +76,35 @@ export default function AuraAi() {
         </Title>
       </div>
 
-      <Title level={5} style={{ margin: 0, marginTop: 4, textAlign: 'center', justifyContent: 'center', alignItems: 'center', fontFamily: 'Sansation' }}>
-        {question}
-      </Title>
-
-
       <div style={{ flex: 1, padding: 24, background: 'white', overflowY: 'auto' }}>
-                {messages.map((msg, index) => (
-            <Card key={index} style={{ fontSize: 14, marginBottom: 12 }}>
-              <Paragraph>{msg.text}</Paragraph>
-            </Card>
-          ))}
+        {messages.map((msg, index) => (
+          <Card
+            key={index}
+            style={{
+              fontSize: 14,
+              marginBottom: 12,
+              backgroundColor: msg.role === 'user' ? '#f0f0f0' : 'white',
+              borderLeft: msg.role === 'assistant' ? '4px solid #6f42c1' : 'none'
+            }}
+          >
+            <Paragraph>{msg.text}</Paragraph>
+          </Card>
+        ))}
+        {isLoading && (
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <Spin tip="Aura está pensando..." />
+          </div>
+        )}
       </div>
-
 
       <div style={{ padding: 12, background: 'white' }}>
         <Input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onPressEnter={handleAskAura}
-          placeholder="Hi, I’m Aura, your AI Assistant. Tell me, what question do you have?"
+          placeholder="Hi, I'm Aura, your AI Assistant. Tell me, what question do you have?"
           size="large"
+          disabled={isLoading}
         />
       </div>
     </div>
