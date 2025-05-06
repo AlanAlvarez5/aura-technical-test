@@ -30,6 +30,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      VITE_FMP_API_KEY: ${{ secrets.VITE_FMP_API_KEY }}
+      VITE_FMP_HOST: ${{ secrets.VITE_FMP_HOST }}
+      VITE_OPEN_AI_API_KEY: ${{ secrets.VITE_OPEN_AI_API_KEY }}
+      VITE_ANTHROPIC_API_KEY: ${{ secrets.VITE_ANTHROPIC_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,6 +47,8 @@ jobs:
         run: npm ci
       - name: Construir
         run: npm run build
+        env:
+          VITE_APP_ENV: prod
       - name: Verificar dist
         run: ls -la ./dist
       - name: Configurar Pages
